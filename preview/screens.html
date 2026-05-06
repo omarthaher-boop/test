@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TripTracker – Screen Preview</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #3B82F6; --primary-dark: #2563EB; --primary-light: #DBEAFE;
+    --secondary: #10B981; --secondary-light: #D1FAE5;
+    --danger: #EF4444; --danger-light: #FEE2E2;
+    --warning: #F59E0B; --warning-light: #FEF3C7;
+    --purple: #8B5CF6; --purple-light: #EDE9FE;
+    --bg: #F8FAFC; --surface: #FFFFFF; --border: #E2E8F0;
+    --text: #0F172A; --text-secondary: #64748B; --text-muted: #94A3B8;
+    --dark: #1E293B;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0F172A;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  h1 {
+    color: white;
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .subtitle { color: #94A3B8; text-align: center; margin-bottom: 32px; font-size: 14px; }
+
+  /* Tab navigation */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .tab {
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid #334155;
+    color: #94A3B8;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+    background: #1E293B;
+  }
+  .tab.active, .tab:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+  }
+
+  /* Screen gallery */
+  .gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: center;
+  }
+
+  /* Phone frame */
+  .phone-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .phone-label {
+    color: #64748B;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .phone {
+    width: 375px;
+    height: 812px;
+    background: var(--bg);
+    border-radius: 44px;
+    border: 8px solid #1E293B;
+    box-shadow: 0 0 0 2px #334155, 0 40px 80px rgba(0,0,0,0.5);
+    overflow: hidden;
+    position: relative;
+    display: none;
+    flex-direction: column;
+  }
+  .phone.active { display: flex; }
+
+  /* Status bar */
+  .status-bar {
+    height: 44px;
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    flex-shrink: 0;
+  }
+  .status-bar-dark { background: var(--dark); }
+  .status-time { font-size: 15px; font-weight: 600; color: var(--text); }
+  .status-icons { display: flex; gap: 6px; align-items: center; font-size: 12px; color: var(--text); }
+
+  /* Screen content */
+  .screen {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    background: var(--bg);
+  }
+  .screen::-webkit-scrollbar { display: none; }
+
+  /* Bottom tab bar */
+  .tab-bar {
+    height: 80px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 8px;
+    flex-shrink: 0;
+  }
+  .tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    cursor: pointer;
+  }
+  .tab-item svg { width: 24px; height: 24px; }
+  .tab-item span { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+  .tab-item.active span { color: var(--primary); }
+  .tab-item.active svg path, .tab-item.active svg circle { stroke: var(--primary) !important; }
+
+  /* Center FAB tab */
+  .tab-fab {
+    width: 56px;
+    height: 56px;
+    border-radius: 28px;
+    background: var(--primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -16px;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+    flex-shrink: 0;
+  }
+  .tab-fab.recording { background: var(--danger-light); }
+
+  /* Utility styles */
+  .p16 { padding: 16px; }
+  .p20 { padding: 20px; }
+  .p24 { padding: 24px; }
+  .px16 { padding-left: 16px; padding-right: 16px; }
+  .gap8 { display: flex; flex-direction: column; gap: 8px; }
+  .gap12 { display: flex; flex-direction: column; gap: 12px; }
+  .gap16 { display: flex; flex-direction: column; gap: 16px; }
+  .row { display: flex; flex-direction: row; align-items: center; }
+  .row-between { display: flex; flex-direction: row; align-items: center; justify-content: space-between; }
+  .center { display: flex; align-items: center; justify-content: center; }
+  .col-center { display: flex; flex-direction: column; align-items: center; }
+
+  /* Typography */
+  .h1 { font-size: 30px; font-weight: 700; color: var(--text); }
+  .h2 { font-size: 24px; font-weight: 700; color: var(--text); }
+  .h3 { font-size: 20px; font-weight: 600; color: var(--text); }
+  .body { font-size: 15px; color: var(--text); }
+  .body-sm { font-size: 13px; color: var(--text-secondary); }
+  .caption { font-size: 11px; color: var(--text-muted); }
+  .label { font-size: 13px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0.02em; }
+
+  /* Button */
+  .btn {
+    display: flex; align-items: center; justify-content: center;
+    padding: 14px 24px; border-radius: 12px; font-size: 15px; font-weight: 600;
+    cursor: pointer; border: none; gap: 8px; width: 100%;
+  }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-outline { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); }
+  .btn-ghost { background: transparent; color: var(--primary); }
+  .btn-danger { background: var(--danger); color: white; }
+  .btn-sm { padding: 8px 16px; font-size: 13px; border-radius: 8px; }
+  .btn-lg { padding: 16px 32px; font-size: 17px; min-height: 56px; }
+
+  /* Input */
+  .input-wrap { display: flex; flex-direction: column; gap: 6px; }
+  .input-label { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+  .input {
+    display: flex; align-items: center; background: var(--surface);
+    border: 1.5px solid var(--border); border-radius: 12px;
+    padding: 0 14px; height: 50px; gap: 10px;
+  }
+  .input.focused { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+  .input input { border: none; outline: none; flex: 1; font-size: 15px; background: transparent; color: var(--text); }
+  .input-error { border-color: var(--danger) !important; }
+  .error-text { font-size: 11px; color: var(--danger); }
+
+  /* Card */
+  .card {
+    background: var(--surface); border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    padding: 16px;
+  }
+
+  /* Badge */
+  .badge {
+    display: inline-flex; align-items: center;
+    padding: 3px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 600;
+  }
+  .badge-private { background: var(--purple-light); color: var(--purple); }
+  .badge-business { background: var(--primary-light); color: var(--primary); }
+  .badge-commute { background: var(--secondary-light); color: var(--secondary); }
+
+  /* Logo */
+  .logo-circle {
+    width: 80px; height: 80px; border-radius: 40px;
+    background: var(--primary-light);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 8px;
+  }
+  .logo-circle svg { width: 44px; height: 44px; }
+
+  /* Route dots */
+  .dot-green { width: 10px; height: 10px; border-radius: 5px; background: var(--secondary); flex-shrink: 0; }
+  .dot-red { width: 10px; height: 10px; border-radius: 5px; background: var(--danger); flex-shrink: 0; }
+  .route-line { width: 1.5px; background: var(--border); flex: 1; min-height: 16px; margin: 3px 0; }
+
+  /* Map placeholder */
+  .map-placeholder {
+    height: 220px; border-radius: 12px; overflow: hidden;
+    background: linear-gradient(135deg, #e8edf5 0%, #d1dae8 100%);
+    position: relative; display: flex; align-items: center; justify-content: center;
+  }
+  .map-route {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  }
+
+  /* Avatar */
+  .avatar {
+    width: 80px; height: 80px; border-radius: 40px;
+    background: var(--primary-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 700; color: var(--primary);
+  }
+
+  /* Recording dot */
+  .rec-dot {
+    width: 10px; height: 10px; border-radius: 5px; background: var(--danger);
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* Modal overlay */
+  .modal-overlay {
+    position: absolute; inset: 0; background: rgba(15,23,42,0.55);
+    display: flex; align-items: flex-end; z-index: 50;
+  }
+  .modal-card {
+    background: white; border-radius: 24px 24px 0 0;
+    padding: 24px; width: 100%; max-height: 85%;
+    overflow-y: auto;
+  }
+
+  /* Scrollable area for tall screens */
+  .scroll-area { overflow-y: auto; flex: 1; }
+
+  /* Filter chips */
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    padding: 6px 14px; border-radius: 999px; white-space: nowrap;
+    font-size: 12px; font-weight: 500; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text-secondary); cursor: pointer;
+  }
+  .chip.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+  /* Summary cards */
+  .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .summary-chip {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 8px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+
+  /* Setting row */
+  .setting-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .setting-row:last-child { border-bottom: none; }
+
+  /* Toggle */
+  .toggle {
+    width: 48px; height: 28px; border-radius: 14px; background: var(--primary);
+    position: relative; flex-shrink: 0;
+  }
+  .toggle::after {
+    content: ''; position: absolute; width: 22px; height: 22px;
+    background: white; border-radius: 11px; top: 3px; right: 3px;
+    transition: all 0.2s;
+  }
+  .toggle.off { background: var(--border); }
+  .toggle.off::after { right: auto; left: 3px; }
+
+  /* Export option */
+  .export-opt {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px; border: 1.5px solid var(--border);
+    border-radius: 12px; background: var(--surface); cursor: pointer;
+  }
+  .export-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+
+  /* GDPR */
+  .gdpr-section { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 16px; }
+  .gdpr-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--primary-light); display: flex; align-items: center;
+    justify-content: center; font-size: 20px; flex-shrink: 0;
+  }
+
+  /* Stat */
+  .stat-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+
+  /* Distance comparison */
+  .dist-grid { display: flex; align-items: center; }
+  .dist-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .dist-divider { width: 1px; height: 60px; background: var(--border); }
+
+  /* Section marker */
+  .section-marker { display: flex; flex-direction: column; align-items: center; width: 12px; }
+
+  /* Live stat */
+  .live-stats { display: flex; justify-content: space-around; border-top: 1px solid var(--border); padding-top: 14px; }
+
+  hr { border: none; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<h1>🚗 TripTracker</h1>
+<p class="subtitle">Interaktive Screen-Vorschau · Klicke einen Tab um den Screen anzuzeigen</p>
+
+<div class="tabs">
+  <div class="tab active" onclick="show('login')">Login</div>
+  <div class="tab" onclick="show('register')">Registrierung</div>
+  <div class="tab" onclick="show('gdpr')">DSGVO</div>
+  <div class="tab" onclick="show('dashboard')">Dashboard</div>
+  <div class="tab" onclick="show('detail')">Fahrtdetail</div>
+  <div class="tab" onclick="show('tracking')">Tracking</div>
+  <div class="tab" onclick="show('recording')">Aufzeichnung</div>
+  <div class="tab" onclick="show('profile')">Profil</div>
+  <div class="tab" onclick="show('export')">Export</div>
+  <div class="tab" onclick="show('verify')">E-Mail Verify</div>
+</div>
+
+<div class="gallery" id="gallery">
+
+  <!-- ═══════════════════════════════════════════════ LOGIN ═══ -->
+  <div class="phone-wrap">
+    <div class="phone active" id="screen-login">
+      <div class="status-bar"><span class="status-time">9:41</span><span class="status-icons">●●● 100%</span></div>
+      <div class="screen" style="padding:28px 24px; display:flex; flex-direction:column; gap:24px;">
+        <div class="col-center gap12" style="padding-top:16px;">
+          <div class="logo-circle">
+            <svg viewBox="0 0 44 44" fill="none"><rect x="6" y="20" width="32" height="14" rx="4" stroke="#3B82F6" stroke-width="2.5"/><path d="M10 20l3-9h18l3 9" stroke="#3B82F6" stroke-width="2.5" stroke-linejoin="round"/><circle cx="13" cy="34" r="3" fill="#3B82F6"/><circle cx="31" cy="34" r="3" fill="#3B82F6"/></svg>
+          </div>
+          <div class="h2" style="text-align:center;">Willkommen zurück</div>
+          <div class="body-sm" style="text-align:center;">Melde dich an, um deine Fahrten zu verwalten</div>
+        </div>
+
+        <!-- Biometric card -->
+        <div style="border:1.5px solid var(--primary);border-radius:16px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--primary-light);">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M12 1C8 1 5 4 5 7v1M12 1c4 0 7 3 7 6v1M5 8v4a7 7 0 0014 0V8" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/><path d="M9 12a3 3 0 006 0" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/></svg>
+          <div class="body-sm" style="color:var(--primary);font-weight:500;">Mit Face ID anmelden</div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="flex:1;height:1px;background:var(--border);"></div>
+          <div class="caption">oder mit Passwort</div>
+          <div style="flex:1;height:1px;background:var(--border);"></div>
+        </div>
+
+        <div class="gap12">
+          <div class="input-wrap">
+            <div class="input-label">E-Mail-Adresse</div>
+            <div class="input"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z" stroke="#94A3B8" stroke-width="1.8"/><path d="M22 6l-10 7L2 6" stroke="#94A3B8" stroke-width="1.8"/></svg><input placeholder="max@beispiel.de" style="color:var(--text-muted);" readonly></div>
+          </div>
+          <div class="input-wrap">
+            <div class="input-label">Passwort</div>
+            <div class="input focused"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="#3B82F6" stroke-width="1.8"/><path d="M8 11V7a4 4 0 018 0v4" stroke="#3B82F6" stroke-width="1.8"/></svg><input type="password" value="••••••••" style="color:var(--text);" readonly></div>
+          </div>
+          <button class="btn btn-primary btn-lg" style="margin-top:4px;">Anmelden</button>
+        </div>
+
+        <div style="display:flex;justify-content:center;gap:4px;">
+          <div class="body-sm">Noch kein Konto?</div>
+          <div class="body-sm" style="color:var(--primary);font-weight:600;">Registrieren</div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label">Login</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ REGISTER ═══ -->
+  <div class="phone-wrap">
+    <div class="phone" id="screen-register">
+      <div class="status-bar"><span class="status-time">9:41</span><span class="status-icons">●●● 100%</span></div>
+      <div class="screen" style="padding:24px; display:flex; flex-direction:column; gap:14px;">
+        <div class="col-center gap8" style="padding-bottom:8px;">
+          <div class="logo-circle" style="width:64px;height:64px;border-radius:32px;">
+            <svg viewBox="0 0 44 44" fill="none" width="36"><rect x="6" y="20" width="32" height="14" rx="4" stroke="#3B82F6" stroke-width="2.5"/><path d="M10 20l3-9h18l3 9" stroke="#3B82F6" stroke-width="2.5" stroke-linejoin="round"/><circle cx="13" cy="34" r="3" fill="#3B82F6"/><circle cx="31" cy="34" r="3" fill="#3B82F6"/></svg>
+          </div>
+          <div class="h2" style="text-align:center;">Konto erstellen</div>
+        </div>
+        <div class="input-wrap">
+          <div class="input-label">Vollständiger Name</div>
+          <div class="input"><input placeholder="Max Mustermann" style="color:var(--text-muted);" readonly></div>
+        </div>
+        <div class="input-wrap">
+          <div class="input-label">Geburtsdatum</div>
+          <div class="input"><input placeholder="1990-01-15" style="color:var(--text);" value="1990-01-15" readonly></div>
+        </div>
+        <div class="input-wrap">
+          <div class="input-label">Autokennzeichen</div>
+          <div class="input focused"><input placeholder="M AB 1234" value="M AB 1234" style="color:var(--text);font-weight:600;letter-spacing:0.08em;" readonly></div>
+        </div>
+        <div class="input-wrap">
+          <div class="input-label">E-Mail-Adresse</div>
+          <div class="input"><input placeholder="max@beispiel.de" style="color:var(--text-muted);" readonly></div>
+        </div>
+        <div class="input-wrap">
+          <div class="input-label">Passwort</div>
+          <div class="input"><input type="password" value="••••••••" style="color:var(--text);" readonly></div>
+        </div>
+        <div class="input-wrap">
+          <div class="input-label">Passwort bestätigen</div>
+          <div class="input input-error"><input type="password" value="•••••" style="color:var(--text);" readonly></div>
+          <div class="error-text">Passwörter stimmen nicht überein</div>
+        </div>
+        <button class="btn btn-primary" style="margin-top:4px;">Konto erstellen</button>
+        <div style="display:flex;justify-content:center;gap:4px;">
+          <div class="body-sm">Bereits ein Konto?</div>
+          <div class="body-sm" style="color:var(--primary);font-weight:600;">Anmelden</div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label">Registrierung</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ GDPR ═══ -->
+  <div class="phone-wrap">
+    <div class="phone" id="screen-gdpr">
+      <div class="status-bar"><span class="status-time">9:41</span><span class="status-icons">●●● 100%</span></div>
+      <div class="screen" style="display:flex;flex-direction:column;">
+        <div style="padding:24px 24px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;">
+          <div style="width:88px;height:88px;border-radius:44px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:44px;">🛡️</div>
+          <div class="h2" style="text-align:center;">Datenschutz &amp; Einwilligung</div>
+          <div class="body-sm" style="text-align:center;">Bitte lies unsere Datenschutzerklärung durch und stimme zu.</div>
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:0 24px;">
+          <div class="gdpr-section">
+            <div class="gdpr-icon">📍</div>
+            <div><div class="body" style="font-weight:600;margin-bottom:4px;">Standortdaten</div><div class="body-sm">Wir erfassen deinen GPS-Standort ausschließlich während aktiver Fahrten. Die Daten werden verschlüsselt gespeichert.</div></div>
+          </div>
+          <div class="gdpr-section">
+            <div class="gdpr-icon">🚗</div>
+            <div><div class="body" style="font-weight:600;margin-bottom:4px;">Fahrtdaten</div><div class="body-sm">Startort, Zielort, Strecke, Dauer und Fahrtzweck werden für deine Dokumentation gespeichert.</div></div>
+          </div>
+          <div class="gdpr-section">
+            <div class="gdpr-icon">👤</div>
+            <div><div class="body" style="font-weight:600;margin-bottom:4px;">Nutzerdaten</div><div class="body-sm">Name, Geburtsdatum, Kennzeichen und E-Mail werden für dein Konto benötigt.</div></div>
+          </div>
+          <div class="gdpr-section">
+            <div class="gdpr-icon">🗑️</div>
+            <div><div class="body" style="font-weight:600;margin-bottom:4px;">Datenlöschung (DSGVO Art. 17)</div><div class="body-sm">Du kannst alle deine Daten jederzeit unter Profil → Konto löschen vollständig entfernen.</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;justify-content:center;padding:12px 0;color:var(--primary);">
+            <span style="font-size:14px;">🔗</span><div class="body-sm" style="color:var(--primary);">Vollständige Datenschutzerklärung lesen</div>
+          </div>
+        </div>
+        <div style="padding:16px 24px 24px;display:flex;flex-direction:column;gap:10px;">
+          <button class="btn btn-primary btn-lg">Zustimmen &amp; Fortfahren</button>
+          <button class="btn btn-ghost">Ablehnen</button>
+          <div class="caption" style="text-align:center;padding:0 12px;">Durch die Zustimmung erklärst du dich mit der Verarbeitung deiner Daten einverstanden.</div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label">DSGVO-Einwilligung</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ DASHBOARD ═══ -->
+  <div class="phone-wrap">
+    <div class="phone" id="screen-dashboard">
+      <div class="status-bar"><span class="status-time">9:41</span><span class="status-icons">●●● 100%</span></div>
+      <div class="screen">
+        <div style="padding:16px 16px 0;">
+          <!-- Header -->
+          <div class="row-between" style="padding:8px 0 12px;">
+            <div>
+              <div class="h2">Fahrten</div>
+              <div class="body-sm">Guten Tag, Max</div>
+            </div>
+            <div style="width:44px;height:44px;border-radius:22px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:20px;">📤</div>
+          </div>
+          <!-- Summary -->
+          <div class="summary-grid" style="margin-bottom:12px;">
+            <div class="summary-chip"><span style="font-size:16px;">🚗</span><div class="body" style="font-weight:700;">12</div><div class="caption">Fahrten</div></div>
+            <div class="summary-chip"><span style="font-size:16px;">⚡</span><div class="body" style="font-weight:700;">847 km</div><div class="caption">Gesamt</div></div>
+            <div class="summary-chip"><span style="font-size:16px;">💼</span><div class="body" style="font-weight:700;">7</div><div class="caption">Geschäftl.</div></div>
+          </div>
+          <!-- Filters -->
+          <div class="chips" style="margin-bottom:10px;">
+            <div class="chip active">Letzter Monat</div>
+            <div class="chip">3 Monate</div>
+            <div class="chip">6 Monate</div>
+            <div class="chip">Dieses Jahr</div>
+            <div class="chip">📅 Zeitraum</div>
+          </div>
+          <div class="label" style="margin-bottom:10px;">12 Fahrten gefunden</div>
+        </div>
+
+        <!-- Trip cards -->
+        <div style="padding:0 16px;display:flex;flex-direction:column;gap:8px;padding-bottom:16px;">
+          <!-- Card 1 -->
+          <div class="card">
+            <div class="row-between" style="margin-bottom:10px;">
+              <div class="label">Heute</div>
+              <div class="badge badge-business">Geschäftlich</div>
+            </div>
+            <div style="display:flex;gap:10px;margin-bottom:12px;">
+              <div class="section-marker"><div class="dot-green"></div><div class="route-line"></div><div class="dot-red"></div></div>
+              <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:12px;">
+                <div class="body" style="font-weight:500;">München, Marienplatz</div>
+                <div class="body-sm">Frankfurt, Hauptbahnhof</div>
+              </div>
+            </div>
+            <hr style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;">
+              <div class="stat-item"><div class="body-sm" style="font-weight:700;color:var(--primary);">412 km</div><div class="caption">Gefahren</div></div>
+              <div class="stat-item"><div class="body-sm" style="font-weight:600;color:var(--text-muted);">395 km</div><div class="caption">Kürzeste</div></div>
+              <div class="stat-item"><div class="body-sm" style="font-weight:700;">3 Std. 48 Min.</div><div class="caption">Dauer</div></div>
+              <div class="stat-item"><div class="body-sm" style="font-weight:700;">08:15 – 12:03</div><div class="caption">Zeit</div></div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="card">
+            <div class="row-between" style="margin-bottom:10px;">
+              <div class="label">Gestern</div>
+              <div class="badge badge-commute">Arbeitsweg</div>
+            </div>
+            <div style="display:flex;gap:10px;margin-bottom:12px;">
+              <div class="section-marker"><div class="dot-green"></div><div class="route-line"></div><div class="dot-red"></div></div>
+              <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:12px;">
+                <div class="body" style="font-weight:500;">Schwabing, Leopoldstr.</div>
+                <div class="body-sm">Maxvorstadt, TU München</div>
+              </div>
+            </div>
+            <hr style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;">
+              <div class="stat-item"><div class="body-sm" style="font-weight:700;color:var(--primary);">8.4 km</div><div class="caption">Gefahren</div></div>
+              <div class="stat-item"><div class="body-sm" style="font-weight:600;color:var(--text-muted);">7.1 km</div><div class="caption">Kürzeste</div></div>
+              <div class="stat-item"><div class="body-sm" style="font-weight:700;">18 Min.</div><div class="caption">Dauer</div></div>
+              <div class="stat-item"><div class="body-sm" style="font-weight:700;">07:42 – 08:00</div><div class="caption">Zeit</div></div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="card">
+            <div class="row-between" style="margin-bottom:10px;">
+              <div class="label">03. Jan. 2026</div>
+              <div class="badge badge-private">Privat</div>
+            </div>
+            <div style="display:flex;gap:10px;margin-bottom:12px;">
+              <div class="section-marker"><div class="dot-green"></div><div class="route-line"></div><div class="dot-red"></div></div>
+              <div style="flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:12px;">
+                <div class="body" style="font-weight:500;">Augsburg Zentrum</div>
+                <div class="body-sm">IKEA Brunnthal</div>
+              </div>
+            </div>
+            <hr style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;">
+              <div class="stat-item"><div class="body-sm" style="font-weight:700;color:var(--primary);">62.3 km</div><div class="caption">Gefahren</div></div>
+              <div class="stat-item"><div class="body-sm" style="font-weight:600;color:var(--text-muted);">58.7 km</div><div class="caption">Kürzeste</div></div>
+              <div class="stat-item"><div class="body-sm" style="font-weight:700;">55 Min.</div><div class="caption">Dauer</div></div>
+              <div class="stat-item"><div class="body-sm" style="font-weight:700;">10:10 – 11:05</div><div class="caption">Zeit</div></div>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;margin-top:8px;background:var(--bg);border-radius:6px;padding:6px 8px;">
+              <span style="font-size:12px;">📝</span><div class="caption">Möbel für das Büro</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item active"><svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/></svg><span>Fahrten</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+          <div class="tab-fab"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#3B82F6" stroke-width="2"/><path d="M12 8v8M8 12h8" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="tab-item"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#94A3B8" stroke-width="2"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/></svg><span>Profil</span></div>
+      </div>
+    </div>
+    <div class="phone-label">Dashboard</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ TRIP DETAIL ═══ -->
+  <div class="phone-wrap">
+    <div class="phone" id="screen-detail">
+      <div class="status-bar"><span class="status-time">9:41</span><span class="status-icons">●●● 100%</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:white;border-bottom:1px solid var(--border);">
+        <div style="padding:6px;font-size:20px;cursor:pointer;">←</div>
+        <div class="h3">Fahrtdetails</div>
+        <div style="padding:6px;font-size:18px;color:var(--danger);cursor:pointer;">🗑️</div>
+      </div>
+      <div class="screen">
+        <div style="padding:16px;display:flex;flex-direction:column;gap:14px;">
+          <!-- Map -->
+          <div class="map-placeholder">
+            <svg viewBox="0 0 359 220" class="map-route">
+              <!-- Map background roads -->
+              <rect width="359" height="220" fill="#e8edf5"/>
+              <path d="M0 110 Q60 80 120 95 Q180 110 240 90 Q300 70 359 80" stroke="#d1dae8" stroke-width="18" fill="none"/>
+              <path d="M80 0 Q100 50 95 110 Q90 160 100 220" stroke="#d1dae8" stroke-width="12" fill="none"/>
+              <path d="M200 0 Q195 60 205 110 Q215 170 210 220" stroke="#d1dae8" stroke-width="10" fill="none"/>
+              <!-- Actual route (blue) -->
+              <path d="M40 170 Q80 140 130 120 Q180 100 230 75 Q270 55 320 50" stroke="#3B82F6" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <!-- Shortest route (dashed grey) -->
+              <path d="M40 170 Q100 130 180 90 Q250 60 320 50" stroke="#9CA3AF" stroke-width="2.5" fill="none" stroke-dasharray="10,6" stroke-linecap="round"/>
+              <!-- Start marker -->
+              <circle cx="40" cy="170" r="7" fill="#10B981" stroke="white" stroke-width="2"/>
+              <!-- End marker -->
+              <circle cx="320" cy="50" r="7" fill="#EF4444" stroke="white" stroke-width="2"/>
+            </svg>
+          </div>
+          <!-- Legend -->
+          <div style="display:flex;gap:20px;justify-content:center;">
+            <div style="display:flex;align-items:center;gap:6px;"><div style="width:24px;height:3px;background:#3B82F6;border-radius:2px;"></div><div class="caption">Gefahrene Route</div></div>
+            <div style="display:flex;align-items:center;gap:6px;"><div style="width:24px;border-top:2.5px dashed #9CA3AF;"></div><div class="caption">Kürzeste Route</div></div>
+          </div>
+          <!-- Header row -->
+          <div class="row-between">
+            <div><div class="h3">Heute</div><div class="body-sm">08:15 – 12:03</div></div>
+            <div class="badge badge-business">Geschäftlich</div>
+          </div>
+          <!-- Distance comparison -->
+          <div class="card">
+            <div class="dist-grid">
+              <div class="dist-item">
+                <span style="font-size:18px;">⚡</span>
+                <div class="h3" style="color:var(--primary);">412 km</div>
+                <div class="caption" style="text-align:center;">Gefahrene Strecke</div>
+              </div>
+              <div class="dist-divider"></div>
+              <div class="dist-item">
+                <span style="font-size:18px;">🗺️</span>
+                <div class="h3" style="color:var(--text-secondary);">395 km</div>
+                <div class="caption" style="text-align:center;">Kürzeste Route</div>
+                <div class="caption" style="text-align:center;color:var(--text-muted);">(laut Google Maps)</div>
+              </div>
+              <div class="dist-divider"></div>
+              <div class="dist-item">
+                <span style="font-size:18px;">⏱️</span>
+                <div class="h3" style="color:var(--secondary);">3 Std. 48 Min.</div>
+                <div class="caption" style="text-align:center;">Dauer</div>
+              </div>
+            </div>
+          </div>
+          <!-- Route -->
+          <div class="card">
+            <div class="label" style="margin-bottom:12px;">Route</div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="color:var(--secondary);font-size:16px;padding-top:2px;">●</div>
+              <div><div class="caption" style="color:var(--text-muted);">Start</div><div class="body" style="font-weight:500;">München, Marienplatz</div><div class="caption">08:15 Uhr</div></div>
+            </div>
+            <div style="width:1.5px;height:20px;background:var(--border);margin:6px 0 6px 7px;"></div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="color:var(--danger);font-size:16px;padding-top:2px;">📍</div>
+              <div><div class="caption" style="color:var(--text-muted);">Ziel</div><div class="body" style="font-weight:500;">Frankfurt, Hauptbahnhof</div><div class="caption">12:03 Uhr</div></div>
+            </div>
+          </div>
+          <!-- Note -->
+          <div class="card">
+            <div class="label" style="margin-bottom:8px;">Notiz</div>
+            <div class="body-sm">Kundenpräsentation Projekt Alpha – Mietwagen auf Kosten des Auftraggebers</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label">Fahrtdetail</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ TRACKING IDLE ═══ -->
+  <div class="phone-wrap">
+    <div class="phone" id="screen-tracking">
+      <div class="status-bar"><span class="status-time">9:41</span><span class="status-icons">●●● 100%</span></div>
+      <div class="screen">
+        <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
+          <div><div class="h2">Fahrt aufzeichnen</div><div class="body-sm">Starte oder beende eine Fahrt</div></div>
+          <!-- Map -->
+          <div class="map-placeholder" style="height:240px;">
+            <svg viewBox="0 0 327 240" width="100%" height="100%" style="position:absolute;top:0;left:0;">
+              <rect width="327" height="240" fill="#e8edf5"/>
+              <path d="M0 120 Q80 100 160 115 Q240 130 327 100" stroke="#d1dae8" stroke-width="20" fill="none"/>
+              <path d="M100 0 Q105 60 100 120 Q95 180 100 240" stroke="#d1dae8" stroke-width="14" fill="none"/>
+              <circle cx="163" cy="120" r="8" fill="#3B82F6" stroke="white" stroke-width="3"/>
+              <circle cx="163" cy="120" r="20" fill="rgba(59,130,246,0.15)"/>
+            </svg>
+            <div style="position:absolute;bottom:12px;right:12px;background:white;border-radius:8px;padding:6px 10px;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+              <div class="caption" style="font-weight:600;">📍 München</div>
+            </div>
+          </div>
+          <!-- Idle state -->
+          <div class="card" style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:28px 20px;">
+            <span style="font-size:48px;">🚗</span>
+            <div class="body-sm" style="text-align:center;">Noch keine aktive Fahrt. Drücke Start, um die Aufzeichnung zu beginnen.</div>
+            <button class="btn btn-primary btn-lg" style="width:100%;">▶ Start</button>
+          </div>
+          <!-- Info hints -->
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;gap:10px;align-items:center;background:var(--primary-light);border-radius:10px;padding:10px 14px;">
+              <span>📍</span><div class="body-sm" style="color:var(--primary);">GPS wird beim Start automatisch aktiviert</div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;background:var(--secondary-light);border-radius:10px;padding:10px 14px;">
+              <span>📶</span><div class="body-sm" style="color:var(--secondary);">Hintergrund-Tracking auch bei gesperrtem Display</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item"><svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/></svg><span>Fahrten</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+          <div class="tab-fab"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#3B82F6" stroke-width="2"/><path d="M10 8l6 4-6 4V8z" fill="#3B82F6"/></svg></div>
+        </div>
+        <div class="tab-item"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#94A3B8" stroke-width="2"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/></svg><span>Profil</span></div>
+      </div>
+    </div>
+    <div class="phone-label">Tracking (Idle)</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ RECORDING ═══ -->
+  <div class="phone-wrap">
+    <div class="phone" id="screen-recording">
+      <div class="status-bar"><span class="status-time">9:41</span><span class="status-icons">●●● 100%</span></div>
+      <div class="screen">
+        <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
+          <div><div class="h2">Fahrt aufzeichnen</div></div>
+          <!-- Live map -->
+          <div class="map-placeholder" style="height:240px;">
+            <svg viewBox="0 0 327 240" width="100%" height="100%" style="position:absolute;top:0;left:0;">
+              <rect width="327" height="240" fill="#e8edf5"/>
+              <path d="M0 120 Q80 100 160 115 Q240 130 327 100" stroke="#d1dae8" stroke-width="20" fill="none"/>
+              <path d="M100 0 Q105 60 100 120 Q95 180 100 240" stroke="#d1dae8" stroke-width="14" fill="none"/>
+              <!-- Live route being drawn -->
+              <path d="M60 160 Q100 140 130 125 Q160 110 195 100 Q230 90 255 85" stroke="#3B82F6" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <!-- Start marker -->
+              <circle cx="60" cy="160" r="6" fill="#10B981" stroke="white" stroke-width="2"/>
+              <!-- Current position pulsing -->
+              <circle cx="255" cy="85" r="12" fill="rgba(59,130,246,0.2)"/>
+              <circle cx="255" cy="85" r="7" fill="#3B82F6" stroke="white" stroke-width="2.5"/>
+            </svg>
+            <div style="position:absolute;top:12px;left:12px;background:rgba(239,68,68,0.9);border-radius:8px;padding:4px 10px;display:flex;align-items:center;gap:6px;">
+              <div class="rec-dot" style="width:8px;height:8px;background:white;"></div>
+              <div style="font-size:11px;font-weight:700;color:white;">LIVE</div>
+            </div>
+          </div>
+          <!-- Status card -->
+          <div class="card" style="gap:14px;display:flex;flex-direction:column;">
+            <div class="row-between">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div class="rec-dot"></div>
+                <div class="body" style="font-weight:600;color:var(--danger);">Aufzeichnung läuft</div>
+              </div>
+              <div class="h3" style="color:var(--primary);">00:23:47</div>
+            </div>
+            <div class="live-stats">
+              <div class="stat-item"><span style="font-size:18px;">🚀</span><div class="body-sm" style="font-weight:700;">67 km/h</div><div class="caption">Geschwindigkeit</div></div>
+              <div class="stat-item"><span style="font-size:18px;">📍</span><div class="body-sm" style="font-weight:700;">184</div><div class="caption">GPS-Punkte</div></div>
+              <div class="stat-item"><span style="font-size:18px;">⏱️</span><div class="body-sm" style="font-weight:700;">23:47</div><div class="caption">Dauer</div></div>
+            </div>
+          </div>
+          <!-- Stop form -->
+          <div class="card" style="display:flex;flex-direction:column;gap:12px;">
+            <div class="h3">Fahrt beenden</div>
+            <!-- Purpose selector -->
+            <div><div class="label" style="margin-bottom:8px;">Fahrtzweck</div>
+              <div style="display:flex;gap:8px;">
+                <div style="flex:1;background:var(--purple-light);border:1.5px solid var(--purple);border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;">
+                  <span>🏠</span><div class="body-sm" style="color:var(--purple);font-weight:600;">Privat</div>
+                </div>
+                <div style="flex:1;background:var(--primary-light);border:1.5px solid var(--primary);border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;">
+                  <span>💼</span><div class="body-sm" style="color:var(--primary);font-weight:600;">Geschäftlich</div>
+                </div>
+                <div style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;">
+                  <span>🏢</span><div class="body-sm" style="color:var(--text-secondary);">Arbeitsweg</div>
+                </div>
+              </div>
+            </div>
+            <!-- Note -->
+            <div><div class="label" style="margin-bottom:8px;">Notiz (optional)</div>
+              <div style="border:1px solid var(--border);border-radius:12px;padding:12px;min-height:56px;background:var(--surface);">
+                <div class="body-sm" style="color:var(--text-muted);">z. B. Kundenbesuch, Dienstreise...</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;">
+              <button class="btn btn-ghost" style="flex:1;border:1px solid var(--border);">Abbrechen</button>
+              <button class="btn btn-danger" style="flex:1;">⏹ Fahrt beenden</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item"><svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/></svg><span>Fahrten</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+          <div class="tab-fab recording"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="7" y="7" width="10" height="10" rx="2" fill="#EF4444"/></svg></div>
+        </div>
+        <div class="tab-item"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#94A3B8" stroke-width="2"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/></svg><span>Profil</span></div>
+      </div>
+    </div>
+    <div class="phone-label">Tracking (Aufzeichnung)</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ PROFILE ═══ -->
+  <div class="phone-wrap">
+    <div class="phone" id="screen-profile">
+      <div class="status-bar"><span class="status-time">9:41</span><span class="status-icons">●●● 100%</span></div>
+      <div class="screen">
+        <div style="padding:20px;display:flex;flex-direction:column;gap:16px;padding-bottom:32px;">
+          <div class="h2">Profil</div>
+          <!-- Avatar -->
+          <div class="col-center" style="gap:10px;padding:16px 0;">
+            <div class="avatar">M</div>
+            <div class="h3">Max Mustermann</div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="font-size:14px;color:var(--secondary);">✓</span>
+              <div class="body-sm">max@beispiel.de</div>
+            </div>
+          </div>
+          <!-- Personal data -->
+          <div class="card">
+            <div class="row-between" style="margin-bottom:12px;">
+              <div class="h3">Persönliche Daten</div>
+              <span style="color:var(--primary);cursor:pointer;">✏️</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0;">
+              <div style="padding:10px 0;border-bottom:1px solid var(--border);"><div class="caption" style="color:var(--text-muted);">Name</div><div class="body" style="font-weight:500;">Max Mustermann</div></div>
+              <div style="padding:10px 0;border-bottom:1px solid var(--border);"><div class="caption" style="color:var(--text-muted);">Geburtsdatum</div><div class="body" style="font-weight:500;">15.01.1990</div></div>
+              <div style="padding:10px 0;border-bottom:1px solid var(--border);"><div class="caption" style="color:var(--text-muted);">Kennzeichen</div><div class="body" style="font-weight:500;letter-spacing:0.06em;">M AB 1234</div></div>
+              <div style="padding:10px 0;"><div class="caption" style="color:var(--text-muted);">E-Mail</div><div class="body" style="font-weight:500;">max@beispiel.de</div></div>
+            </div>
+          </div>
+          <!-- Security -->
+          <div class="card">
+            <div class="h3" style="margin-bottom:12px;">Sicherheit</div>
+            <div class="setting-row">
+              <div style="display:flex;gap:12px;align-items:center;"><span>👆</span><div><div class="body" style="font-weight:500;">Biometrie</div><div class="caption">Face ID / Fingerabdruck</div></div></div>
+              <div class="toggle"></div>
+            </div>
+            <div class="setting-row">
+              <div style="display:flex;gap:12px;align-items:center;"><span>🔒</span><div class="body" style="font-weight:500;">Passwort ändern</div></div>
+              <span style="color:var(--text-muted);">›</span>
+            </div>
+          </div>
+          <!-- Actions -->
+          <div class="card">
+            <div class="h3" style="margin-bottom:12px;">Aktionen</div>
+            <div class="setting-row">
+              <div style="display:flex;gap:12px;align-items:center;"><span>🚪</span><div class="body" style="color:var(--warning);font-weight:500;">Abmelden</div></div>
+              <span style="color:var(--text-muted);">›</span>
+            </div>
+            <div class="setting-row" style="border-bottom:none;">
+              <div style="display:flex;gap:12px;align-items:center;"><span>🗑️</span><div class="body" style="color:var(--danger);font-weight:500;">Konto &amp; Daten löschen (DSGVO)</div></div>
+              <span style="color:var(--text-muted);">›</span>
+            </div>
+          </div>
+          <div class="caption" style="text-align:center;">TripTracker v1.0.0 · DSGVO-konform</div>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab-item"><svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/></svg><span>Fahrten</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+          <div class="tab-fab"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#3B82F6" stroke-width="2"/><path d="M10 8l6 4-6 4V8z" fill="#3B82F6"/></svg></div>
+        </div>
+        <div class="tab-item active"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#3B82F6" stroke-width="2"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/></svg><span style="color:var(--primary);">Profil</span></div>
+      </div>
+    </div>
+    <div class="phone-label">Profil</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ EXPORT ═══ -->
+  <div class="phone-wrap">
+    <div class="phone" id="screen-export">
+      <div class="status-bar"><span class="status-time">9:41</span><span class="status-icons">●●● 100%</span></div>
+      <div class="screen">
+        <div style="padding:20px;display:flex;flex-direction:column;gap:16px;padding-bottom:32px;">
+          <div>
+            <div class="h2">Export</div>
+            <div class="body-sm">Exportiere deine Fahrtenliste als PDF oder CSV</div>
+          </div>
+          <!-- Zeitraum -->
+          <div class="card">
+            <div class="h3" style="margin-bottom:12px;">Zeitraum</div>
+            <div class="chips">
+              <div class="chip active">Letzter Monat</div>
+              <div class="chip">3 Monate</div>
+              <div class="chip">6 Monate</div>
+              <div class="chip">Dieses Jahr</div>
+              <div class="chip">📅 Zeitraum</div>
+            </div>
+          </div>
+          <!-- Format -->
+          <div class="card">
+            <div class="h3" style="margin-bottom:12px;">Format</div>
+            <div class="export-opt" style="margin-bottom:10px;">
+              <div class="export-icon" style="background:#FEE2E2;">📄</div>
+              <div style="flex:1;">
+                <div class="body" style="font-weight:500;">PDF exportieren</div>
+                <div class="body-sm">Fahrtenbuch als formatiertes PDF</div>
+              </div>
+              <span style="color:var(--text-muted);">›</span>
+            </div>
+            <div class="export-opt">
+              <div class="export-icon" style="background:#D1FAE5;">📊</div>
+              <div style="flex:1;">
+                <div class="body" style="font-weight:500;">CSV exportieren</div>
+                <div class="body-sm">Tabellendaten für Excel / Numbers</div>
+              </div>
+              <span style="color:var(--text-muted);">›</span>
+            </div>
+          </div>
+          <!-- Email -->
+          <div class="card">
+            <div class="h3" style="margin-bottom:8px;">Per E-Mail senden</div>
+            <div class="body-sm" style="margin-bottom:12px;">Der PDF-Export wird direkt an die angegebene Adresse gesendet.</div>
+            <div class="input" style="margin-bottom:10px;">
+              <span style="font-size:18px;">📧</span>
+              <input value="max@beispiel.de" style="color:var(--text);" readonly>
+            </div>
+            <button class="btn btn-primary">📤 PDF senden</button>
+          </div>
+          <!-- Fields included -->
+          <div class="card">
+            <div class="h3" style="margin-bottom:10px;">Enthaltene Felder</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--secondary);">✓</span><div class="body-sm">Name &amp; Autokennzeichen</div></div>
+              <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--secondary);">✓</span><div class="body-sm">Datum &amp; Uhrzeit (Start/Stop)</div></div>
+              <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--secondary);">✓</span><div class="body-sm">Startort &amp; Zielort</div></div>
+              <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--secondary);">✓</span><div class="body-sm">Gefahrene Kilometer</div></div>
+              <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--secondary);">✓</span><div class="body-sm">Kürzeste Route (Google Maps)</div></div>
+              <div style="display:flex;gap:8px;align-items:center;"><span style="color:var(--secondary);">✓</span><div class="body-sm">Fahrtdauer &amp; Fahrtzweck &amp; Notiz</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label">Export</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ VERIFY EMAIL ═══ -->
+  <div class="phone-wrap">
+    <div class="phone" id="screen-verify">
+      <div class="status-bar"><span class="status-time">9:41</span><span class="status-icons">●●● 100%</span></div>
+      <div class="screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;gap:24px;">
+        <div style="width:112px;height:112px;border-radius:56px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:56px;">✉️</div>
+        <div class="h2" style="text-align:center;">E-Mail bestätigen</div>
+        <div class="body" style="text-align:center;color:var(--text-secondary);">Wir haben eine Bestätigungs-E-Mail an<br><strong style="color:var(--text);">max@beispiel.de</strong><br>gesendet. Bitte klicke auf den Link.</div>
+        <div style="background:var(--primary-light);border-radius:12px;padding:14px;display:flex;gap:10px;align-items:flex-start;align-self:stretch;">
+          <span style="flex-shrink:0;">ℹ️</span>
+          <div class="body-sm" style="color:var(--text-secondary);">Der Link ist 24 Stunden gültig. Prüfe auch deinen Spam-Ordner.</div>
+        </div>
+        <button class="btn btn-outline" style="align-self:stretch;">E-Mail erneut senden</button>
+        <button class="btn btn-ghost">Zurück zur Anmeldung</button>
+      </div>
+    </div>
+    <div class="phone-label">E-Mail-Verifizierung</div>
+  </div>
+
+</div><!-- /gallery -->
+
+<script>
+function show(id) {
+  // Hide all screens
+  document.querySelectorAll('.phone').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  // Show selected
+  document.getElementById('screen-' + id).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t => {
+    if (t.textContent.trim() === {
+      login:'Login', register:'Registrierung', gdpr:'DSGVO',
+      dashboard:'Dashboard', detail:'Fahrtdetail', tracking:'Tracking',
+      recording:'Aufzeichnung', profile:'Profil', export:'Export', verify:'E-Mail Verify'
+    }[id]) t.classList.add('active');
+  });
+}
+</script>
+</body>
+</html>
